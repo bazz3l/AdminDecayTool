@@ -3,7 +3,7 @@ using System;
 
 namespace Oxide.Plugins
 {
-    [Info("Admin Decay Hammer", "Bazz3l", "0.0.2")]
+    [Info("Admin Decay Hammer", "Bazz3l", "0.0.4")]
     [Description("Hit a building block to start a faster decay.")]
     class AdminDecayHammer : RustPlugin
     {
@@ -135,7 +135,7 @@ namespace Oxide.Plugins
                 Users.Remove(player.userID);
             }
 
-            player.ChatMessage(Users.Contains(player.userID) ? Lang("ToggleEnabled", player.UserIDString) : Lang("ToggleDisabled", player.UserIDString)));
+            player.ChatMessage(Users.Contains(player.userID) ? Lang("ToggleEnabled", player.UserIDString) : Lang("ToggleDisabled", player.UserIDString));
         }
         #endregion
     }
