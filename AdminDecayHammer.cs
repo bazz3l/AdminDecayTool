@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System;
 
 namespace Oxide.Plugins
 {
@@ -7,18 +6,15 @@ namespace Oxide.Plugins
     [Description("Hit a building block to start a faster decay.")]
     class AdminDecayHammer : RustPlugin
     {
-        private const string Perm = "admindecayhammer.use";
-        private List<ulong> Users = new List<ulong>();
+        const string _usePerm = "admindecayhammer.use";
+        List<ulong> _players = new List<ulong>();
 
         #region Config
-        private PluginConfig configData;
+        PluginConfig _config;
 
-        protected override void LoadDefaultConfig()
-        {
-            Config.WriteObject(GetDefaultConfig(), true);
-        }
+        protected override void LoadDefaultConfig() => Config.WriteObject(GetDefaultConfig(), true);
 
-        private PluginConfig GetDefaultConfig()
+        PluginConfig GetDefaultConfig()
         {
             return new PluginConfig
             {
@@ -26,7 +22,7 @@ namespace Oxide.Plugins
             };
         }
 
-        private class PluginConfig
+        class PluginConfig
         {
             public float DecayVariance;
         }
@@ -46,29 +42,27 @@ namespace Oxide.Plugins
                 ["ToggleDisabled"]  = "Decay hammer Disabled."
             }, this);
         }
-
-        private string Lang(string key, string id = null, params object[] args) => string.Format(lang.GetMessage(key, this, id), args);
         #endregion
 
         #region Oxide
-        private void Init()
+        void Init()
         {
-            permission.RegisterPermission(Perm, this);
+            permission.RegisterPermission(_usePerm, this);
 
-            configData = Config.ReadObject<PluginConfig>();
+            _config = Config.ReadObject<PluginConfig>();
         }
 
-        private void OnPlayerDisconnected(BasePlayer player, string reason)
+        void OnPlayerDisconnected(BasePlayer player, string reason)
         {
-            if (player != null && Users.Contains(player.userID))
+            if (player != null && _players.Contains(player.userID))
             {
-                Users.Remove(player.userID);
+                _players.Remove(player.userID);
             }
         }
 
-        private void OnHammerHit(BasePlayer player, HitInfo info)
+         void OnHammerHit(BasePlayer player, HitInfo info)
         {
-            if (player == null || info == null || !Users.Contains(player.userID) || !permission.UserHasPermission(player.UserIDString, Perm))
+            if (player == null || info == null || !_players.Contains(player.userID) || !permission.UserHasPermission(player.UserIDString, _usePerm))
             {
                 return;
             }
@@ -111,7 +105,7 @@ namespace Oxide.Plugins
             foreach(DecayEntity decayEnt in buildManager.decayEntities)
             {
                 decayEnt.ResetUpkeepTime();
-                decayEnt.decayVariance = configData.DecayVariance;
+                decayEnt.decayVariance = _config.DecayVariance;
             }
         }
         #endregion
@@ -120,23 +114,27 @@ namespace Oxide.Plugins
         [ChatCommand("decayhammer")]
         void DecayHammerCommand(BasePlayer player, string cmd, string[] args)
         {
-            if (!permission.UserHasPermission(player.UserIDString, Perm))
+            if (!permission.UserHasPermission(player.UserIDString, _usePerm))
             {
                 player.ChatMessage(Lang("NoPermission"));
                 return;
             }
 
-            if (!Users.Contains(player.userID))
+            if (!_players.Contains(player.userID))
             {
-                Users.Add(player.userID);
+                _players.Add(player.userID);
             }
             else
             {
-                Users.Remove(player.userID);
+                _players.Remove(player.userID);
             }
 
-            player.ChatMessage(Users.Contains(player.userID) ? Lang("ToggleEnabled", player.UserIDString) : Lang("ToggleDisabled", player.UserIDString));
+            player.ChatMessage(_players.Contains(player.userID) ? Lang("ToggleEnabled", player.UserIDString) : Lang("ToggleDisabled", player.UserIDString));
         }
+        #endregion
+
+        #region Helpers
+        string Lang(string key, string id = null, params object[] args) => string.Format(lang.GetMessage(key, this, id), args);
         #endregion
     }
 }
