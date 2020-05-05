@@ -33,13 +33,13 @@ namespace Oxide.Plugins
         {
             lang.RegisterMessages(new Dictionary<string, string>
             {
-                ["NoKeyPress"]      = "To use the decay hammer, please hold shift while hitting a building block.",
-                ["NoBuildingBlock"] = "No building block found.",
-                ["NoDecayEntity"]   = "No decay entity found.",
-                ["NoPermission"]    = "No permission.",
-                ["DecayStarted"]    = "Decay will start on next decay tick.",
-                ["ToggleEnabled"]   = "Decay hammer is now Enabled.",
-                ["ToggleDisabled"]  = "Decay hammer Disabled."
+                {"NoKeyPress", "To use the decay hammer, please hold shift while hitting a building block."},
+                {"NoBuildingBlock", "No building block found."},
+                {"NoDecayEntity", "No decay entity found."},
+                {"NoPermission", "No permission."},
+                {"DecayStarted", "Decay will start on next decay tick."},
+                {"ToggleEnabled", "Decay hammer is now Enabled."},
+                {"ToggleDisabled", "Decay hammer Disabled."}
             }, this);
         }
         #endregion
