@@ -3,15 +3,16 @@ using System.Collections.Generic;
 namespace Oxide.Plugins
 {
     [Info("Admin Decay Hammer", "Bazz3l", "0.0.4")]
-    [Description("Hit a building block to start a faster decay.")]
+    [Description("Start faster decay on buildings by hitting it with the hammer.")]
     class AdminDecayHammer : RustPlugin
     {
+        #region Fields
         const string _usePerm = "admindecayhammer.use";
         List<ulong> _players = new List<ulong>();
+        PluginConfig _config;
+        #endregion
 
         #region Config
-        PluginConfig _config;
-
         protected override void LoadDefaultConfig() => Config.WriteObject(GetDefaultConfig(), true);
 
         PluginConfig GetDefaultConfig()
